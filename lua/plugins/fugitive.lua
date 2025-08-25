@@ -1,0 +1,21 @@
+-- autopairs
+-- https://github.com/windwp/nvim-autopairs
+return {
+  -- 'tpope/vim-fugitive',
+  -- config = function()
+  --   -- Keymaps for fugitive
+  --   -- Example: Leader gs for git status
+  --   vim.keymap.set('n', '<leader>gs', '<cmd>tab Git<CR>', { desc = 'Fugitive: Git Status' })
+  --   -- Example: Leader gb for git blame
+  --   vim.keymap.set('n', '<leader>gb', '<cmd>Git blame<CR>', { desc = 'Fugitive: Git Blame' })
+  --   -- Add more keymaps as needed
+  --   -- rebase always
+  --   vim.keymap.set('n', '<leader>gp', function()
+  --     vim.cmd.Git { 'pull', '--rebase' }
+  --   end, { desc = 'Fugitive: Git Pull --rebase' })
+  --
+  --   -- NOTE: It allows me to easily set the branch i am pushing and any tracking
+  --   -- needed if i did not set the branch up correctly
+  --   vim.keymap.set('n', '<leader>gP', ':Git push -u origin ', { desc = 'Fugitive: Git Push' })
+  -- end,
+}

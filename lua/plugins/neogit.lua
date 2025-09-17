@@ -15,7 +15,7 @@ return {
   config = function()
     require('neogit').setup {
       mappings = {
-				dajhdkljslhjkadhkcj:      sdjaskdjkasjd commit_editor = {
+        commit_editor = {
           ['<C-p>'] = 'PrevMessage', -- remap to CTRL-p
           ['<C-n>'] = 'NextMessage',
           ['<A-r>'] = 'ResetMessage',

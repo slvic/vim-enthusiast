@@ -43,3 +43,13 @@ vim.keymap.set('n', '<leader><tab>[', '<cmd>tabprevious<cr>', { desc = 'Previous
 vim.keymap.set('n', '<leader><tab>o', '<cmd>tabonly<cr>', { desc = 'Close Other Tabs' })
 
 vim.keymap.set('n', '<leader>tr', '<cmd>:set rnu!<cr>', { desc = '[T]oggle: [R]eltive line numbers' })
+
+-- Select from matching tags
+vim.keymap.set('n', '<leader>ts', ':tselect <C-r><C-w><CR>', { desc = '[T]ags: [S]elect from matching tags' })
+
+-- Jump (or select if multiple)
+vim.keymap.set('n', '<leader>tj', ':tjump <C-r><C-w><CR>', { desc = '[T]ags: [J]ump (or select if multiple)' })
+
+-- Next / Previous matching tag
+vim.keymap.set('n', '<leader>tn', ':tnext<CR>', { desc = '[T]ags: [N]ext match' })
+vim.keymap.set('n', '<leader>tp', ':tprev<CR>', { desc = '[T]ags: [P]revious match' })

@@ -6,6 +6,7 @@ vim.g.have_nerd_font = true
 
 require 'configs.opts'
 require 'configs.keymaps'
+require('configs.struct_implements').setup()
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`

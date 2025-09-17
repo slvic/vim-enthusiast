@@ -113,8 +113,7 @@ return {
         },
         {
           elements = {
-            { id = 'repl', size = 0.5 },
-            { id = 'console', size = 0.5 },
+            { id = 'repl', size = 1 },
           },
           size = 10,
           position = 'bottom',

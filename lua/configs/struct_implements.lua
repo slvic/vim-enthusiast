@@ -19,11 +19,51 @@ local M = {}
 
 local namespace = vim.api.nvim_create_namespace('struct_implements')
 
-local function get_gopls_client(bufnr)
-  for _, c in ipairs(vim.lsp.get_active_clients({ bufnr = bufnr })) do
-    if c.name == 'gopls' then
-      return c
+-- Cache package names per file URI to avoid repeated IO
+local pkg_cache = {}
+
+local function package_for_uri(uri)
+  if pkg_cache[uri] ~= nil then
+    return pkg_cache[uri] or nil
+  end
+  local fname = vim.uri_to_fname(uri)
+  if not fname or fname == '' then
+    pkg_cache[uri] = false
+    return nil
+  end
+  local ok, lines = pcall(vim.fn.readfile, fname)
+  if not ok or type(lines) ~= 'table' then
+    pkg_cache[uri] = false
+    return nil
+  end
+  for _, line in ipairs(lines) do
+    local pkg = line:match('^%s*package%s+([%w_]+)')
+    if pkg then
+      pkg_cache[uri] = pkg
+      return pkg
     end
+  end
+  pkg_cache[uri] = false
+  return nil
+end
+
+local function fmt_iface_name(name, uri, container)
+  local pkg = container
+  if not pkg or pkg == '' then
+    pkg = package_for_uri(uri)
+  end
+  if pkg and pkg ~= '' then
+    return string.format('%s.%s', pkg, name)
+  end
+  return name
+end
+
+local function get_gopls_client(bufnr)
+  -- Prefer new API; fall back for older Neovim versions
+  local get_clients = vim.lsp.get_clients or vim.lsp.get_active_clients
+  local clients = get_clients and get_clients({ bufnr = bufnr, name = 'gopls' }) or {}
+  if clients and #clients > 0 then
+    return clients[1]
   end
   return nil
 end
@@ -129,80 +169,131 @@ function M.refresh(bufnr)
 
   clear(bufnr)
 
-  -- Collect all interfaces in the workspace
-  client.request('workspace/symbol', { query = '' }, function(err, result)
-    if err or type(result) ~= 'table' then
-      return
-    end
+  local bufnr_uri = uri_for_buf(bufnr)
+  local map_struct_to_ifaces = {}
 
-    local interfaces = {}
-    for _, sym in ipairs(result) do
-      -- LSP SymbolKind.Interface = 11
-      if (sym.kind == 11) and sym.location and sym.location.uri and sym.location.range then
-        table.insert(interfaces, sym)
+  local function render_from_map()
+    for _, s in ipairs(structs) do
+      local line = s.name_range[1]
+      local ifaces = map_struct_to_ifaces[s.name]
+      if ifaces and #ifaces > 0 then
+        table.sort(ifaces)
+        place(bufnr, line, ('implements: %s'):format(table.concat(ifaces, ', ')))
       end
     end
-    if #interfaces == 0 then
+  end
+
+  -- First try Type Hierarchy (directly gives interfaces as supertypes)
+  local pending = #structs
+  local any_hierarchy = false
+
+  local function on_all_structs_done()
+    if any_hierarchy then
+      render_from_map()
       return
     end
 
-    local bufnr_uri = uri_for_buf(bufnr)
-    local map_struct_to_ifaces = {}
-    local pending = #interfaces
-
-    local function maybe_finish()
-      pending = pending - 1
-      if pending > 0 then
+    -- Fallback: old approach via workspace/symbol + implementation
+    client.request('workspace/symbol', { query = 'interface' }, function(err, result)
+      if err or type(result) ~= 'table' then
         return
       end
-      -- Render
-      for _, s in ipairs(structs) do
-        local line = s.name_range[1]
-        local ifaces = map_struct_to_ifaces[s.name]
-        if ifaces and #ifaces > 0 then
-          place(bufnr, line, ('implements: %s'):format(table.concat(ifaces, ', ')))
+      local interfaces = {}
+      for _, sym in ipairs(result) do
+        if (sym.kind == 11) and sym.location and sym.location.uri and sym.location.range then
+          table.insert(interfaces, sym)
         end
       end
-    end
-
-    for _, iface in ipairs(interfaces) do
-      -- position of the interface identifier
-      local params = lsp_position_params(iface.location.uri, iface.location.range.start)
-      client.request('textDocument/implementation', params, function(e2, res)
-        if not e2 and res then
-          local impls = res
-          if impls and vim.tbl_islist(impls) then
-            for _, loc in ipairs(impls) do
-              if loc.uri == bufnr_uri then
-                -- Try to map to a struct by matching line of type identifier
-                local l = loc.range.start.line
-                for _, s in ipairs(structs) do
-                  local sr = s.name_range[1]
-                  if sr == l then
-                    local list = map_struct_to_ifaces[s.name] or {}
-                    -- Avoid duplicates
-                    local exists = false
-                    for _, n in ipairs(list) do
-                      if n == iface.name then
-                        exists = true
-                        break
+      if #interfaces == 0 then
+        return
+      end
+      local ipending = #interfaces
+      local function imaybe_finish()
+        ipending = ipending - 1
+        if ipending > 0 then
+          return
+        end
+        render_from_map()
+      end
+      for _, iface in ipairs(interfaces) do
+        local iface_display = fmt_iface_name(iface.name, iface.location.uri, iface.containerName)
+        local params = lsp_position_params(iface.location.uri, iface.location.range.start)
+        client.request('textDocument/implementation', params, function(e2, res)
+          if not e2 and res then
+            local impls = res
+            if impls and vim.tbl_islist(impls) then
+              for _, loc in ipairs(impls) do
+                if loc.uri == bufnr_uri then
+                  local l = loc.range.start.line
+                  for _, s in ipairs(structs) do
+                    local sr = s.name_range[1]
+                    if sr == l then
+                      local list = map_struct_to_ifaces[s.name] or {}
+                      local exists = false
+                      for _, n in ipairs(list) do
+                        if n == iface_display then
+                          exists = true
+                          break
+                        end
                       end
+                      if not exists then
+                        table.insert(list, iface_display)
+                      end
+                      map_struct_to_ifaces[s.name] = list
+                      break
                     end
-                    if not exists then
-                      table.insert(list, iface.name)
-                    end
-                    map_struct_to_ifaces[s.name] = list
-                    break
                   end
                 end
               end
             end
           end
+          imaybe_finish()
+        end, bufnr)
+      end
+    end, bufnr)
+  end
+
+  for _, s in ipairs(structs) do
+    local sr, sc, er, ec = unpack(s.name_range)
+    -- pick a position inside the identifier (avoid boundary issues)
+    local midc = math.floor((sc + ec) / 2)
+    local params = lsp_position_params(bufnr_uri, { line = sr, character = midc })
+    client.request('textDocument/prepareTypeHierarchy', params, function(err, items)
+      if not err and items and vim.tbl_islist(items) and #items > 0 then
+        local item = items[1]
+        client.request('typeHierarchy/supertypes', { item = item }, function(e2, supers)
+          if not e2 and supers and vim.tbl_islist(supers) then
+            local list = {}
+            local seen = {}
+            for _, it in ipairs(supers) do
+              -- SymbolKind.Interface = 11
+              if it.kind == 11 then
+                local disp = fmt_iface_name(it.name, it.uri)
+                if not seen[disp] then
+                  table.insert(list, disp)
+                  seen[disp] = true
+                end
+              end
+            end
+            if #list > 0 then
+              any_hierarchy = true
+              map_struct_to_ifaces[s.name] = list
+            end
+          end
+          pending = pending - 1
+          if pending == 0 then
+            on_all_structs_done()
+          end
+        end, bufnr)
+      else
+        -- Could not prepare hierarchy for this struct
+        pending = pending - 1
+        if pending == 0 then
+          on_all_structs_done()
         end
-        maybe_finish()
-      end, bufnr)
-    end
-  end, bufnr)
+      end
+    end, bufnr)
+  end
 end
 
 function M.setup()
@@ -239,4 +330,3 @@ function M.setup()
 end
 
 return M
-

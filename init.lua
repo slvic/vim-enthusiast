@@ -56,11 +56,31 @@ require('lazy').setup({
     opts = {},
   },
   {
+    'f-person/auto-dark-mode.nvim',
+    config = function()
+      require('auto-dark-mode').setup {
+        set_dark_mode = function()
+          vim.o.background = 'dark'
+          vim.cmd.colorscheme 'catppuccin-mocha'
+        end,
+        set_light_mode = function()
+          vim.o.background = 'light'
+          vim.cmd.colorscheme 'catppuccin-latte'
+        end,
+      }
+      require('auto-dark-mode').init()
+    end,
+  },
+  {
     'catppuccin/nvim',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     config = function()
-      ---@diagnostic disable-next-line: missing-fields
-      vim.cmd.colorscheme 'catppuccin-latte'
+      -- Let nvim pick light/dark based on terminal (Ghostty) background
+      if vim.o.background == 'light' then
+        vim.cmd.colorscheme 'catppuccin-latte'
+      else
+        vim.cmd.colorscheme 'catppuccin-mocha'
+      end
     end,
   },
 

@@ -274,4 +274,5 @@ return {
       require('symbol-usage').setup()
     end,
   },
+  { 'slvic/go-struct-implements' },
 }

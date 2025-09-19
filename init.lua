@@ -65,7 +65,7 @@ require('lazy').setup({
         end,
         set_light_mode = function()
           vim.o.background = 'light'
-          vim.cmd.colorscheme 'catppuccin-latte'
+          vim.cmd.colorscheme 'catppuccin-frappe'
         end,
       }
       require('auto-dark-mode').init()
@@ -74,14 +74,6 @@ require('lazy').setup({
   {
     'catppuccin/nvim',
     priority = 1000, -- Make sure to load this before all the other start plugins.
-    config = function()
-      -- Let nvim pick light/dark based on terminal (Ghostty) background
-      if vim.o.background == 'light' then
-        vim.cmd.colorscheme 'catppuccin-latte'
-      else
-        vim.cmd.colorscheme 'catppuccin-mocha'
-      end
-    end,
   },
 
   -- Highlight todo, notes, etc in comments

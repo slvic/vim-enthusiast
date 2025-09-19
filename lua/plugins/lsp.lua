@@ -221,10 +221,19 @@ return {
         },
       }
 
-      -- Setup each server directly with lspconfig
+      -- Setup each server using the new vim.lsp.config API (Neovim 0.11+)
+      -- Fall back to the legacy lspconfig.setup on older Neovim versions.
       for server_name, server in pairs(servers) do
         server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-        require('lspconfig')[server_name].setup(server)
+
+        if vim.lsp and vim.lsp.enable and vim.lsp.config then
+          -- New API: define/extend the server config, then enable it
+          vim.lsp.config(server_name, server)
+          vim.lsp.enable(server_name)
+        else
+          -- Legacy path for Neovim < 0.11
+          require('lspconfig')[server_name].setup(server)
+        end
       end
     end,
   },

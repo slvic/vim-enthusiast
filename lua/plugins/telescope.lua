@@ -36,17 +36,6 @@ return { -- Fuzzy Finder (files, lsp, etc)
       { '<leader><leader>', builtin.buffers, desc = '[ ] Find existing buffers' },
       { '<leader>gg', builtin.git_status, desc = 'Find [G]iT Status' },
       { '<leader>gb', builtin.git_branches, desc = 'Find [G]iT [B]ranches' },
-      {
-        '<leader>sG',
-        function()
-          builtin.live_grep {
-            prompt_title = 'Go Module Files',
-            cwd = nil,
-            search_dirs = getGoModDirs(),
-          }
-        end,
-        desc = '[S]earch in [G]o mod',
-      },
     }
   end,
   dependencies = {

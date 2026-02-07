@@ -23,7 +23,6 @@ return {
   { -- lsp
     'neovim/nvim-lspconfig',
     event = { 'BufReadPre', 'BufNewFile' },
-    dependencies = { 'nvim-telescope/telescope.nvim' }, -- Ensure telescope is available
     config = function()
       require 'lspconfig'
       vim.lsp.enable 'gopls'

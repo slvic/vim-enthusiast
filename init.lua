@@ -1,6 +1,46 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+-- deps
+vim.pack.add { 'https://github.com/nvim-lua/plenary.nvim' }
+
+--
+
+vim.pack.add { 'https://github.com/NMAC427/guess-indent.nvim' } -- Detect tabstop and shiftwidth automatically
+vim.pack.add({ 'https://github.com/windwp/nvim-autopairs' }, {
+  event = 'InsertEnter',
+})
+vim.pack.add({ 'https://github.com/catppuccin/nvim' }, {
+  name = 'catppuccin',
+  priority = 1000, -- Ensure it loads before other plugins
+  opts = {
+    flavour = 'frappe',
+  },
+})
+vim.cmd.colorscheme 'catppuccin' -- Load the colorscme immediately
+vim.pack.add({ 'https://github.com/folke/todo-comments.nvim' }, {
+  event = 'VimEnter',
+  dependencies = { 'https://github.com/nvim-lua/plenary.nvim' },
+  opts = { signs = false },
+})
+
+vim.pack.add( -- Collection of various small independent plugins/modules
+  { 'https://github.com/nvim-mini/mini.nvim' },
+  {
+    config = function()
+      require('mini.ai').setup { n_lines = 500 }
+
+      local statusline = require 'mini.statusline'
+      statusline.setup { use_icons = vim.g.have_nerd_font }
+
+      ---@diagnostic disable-next-line: duplicate-set-field
+      statusline.section_location = function()
+        return '%2l:%-2v'
+      end
+    end,
+  }
+)
+
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
 
@@ -29,42 +69,6 @@ local rtp = vim.opt.rtp
 rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
-  -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-  'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
-  {
-    'windwp/nvim-autopairs',
-    event = 'InsertEnter',
-    opts = {},
-  },
-  {
-    'catppuccin/nvim',
-    name = 'catppuccin',
-    priority = 1000, -- Ensure it loads before other plugins
-    opts = {
-      flavour = 'frappe',
-    },
-    config = function(_, opts)
-      require('catppuccin').setup(opts)
-      vim.cmd.colorscheme 'catppuccin' -- Load the colorscheme immediately
-    end,
-  },
-  -- Highlight todo, notes, etc in comments
-  { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
-
-  { -- Collection of various small independent plugins/modules
-    'echasnovski/mini.nvim',
-    config = function()
-      require('mini.ai').setup { n_lines = 500 }
-
-      local statusline = require 'mini.statusline'
-      statusline.setup { use_icons = vim.g.have_nerd_font }
-
-      ---@diagnostic disable-next-line: duplicate-set-field
-      statusline.section_location = function()
-        return '%2l:%-2v'
-      end
-    end,
-  },
   { import = 'plugins' },
 }, {
   ui = {

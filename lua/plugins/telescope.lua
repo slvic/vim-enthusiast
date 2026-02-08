@@ -1,88 +1,90 @@
-local getGoModDirs = function()
-  local handle = io.popen 'go list -f "{{ .Dir }}" -m all 2>/dev/null'
-  if not handle then
-    return
-  end
+-- local getGoModDirs = function()
+--   local handle = io.popen 'go list -f "{{ .Dir }}" -m all 2>/dev/null'
+--   if not handle then
+--     return
+--   end
+--
+--   local result = handle:read '*a'
+--   handle:close()
+--
+--   if not result or result == '' then
+--     return
+--   end
+--
+--   local dirs = {}
+--   local seen = {}
+--   for dir in result:gmatch '[^\r\n]+' do
+--     if not seen[dir] then
+--       table.insert(dirs, dir)
+--       seen[dir] = true
+--     end
+--   end
+--   return dirs
+-- end
+--
+-- return { -- Fuzzy Finder (files, lsp, etc)
+--   'nvim-telescope/telescope.nvim',
+--   cmd = { 'Telescope' },
+--   -- Define keymaps here so Lazy sets them immediately and loads Telescope on first use
+--   keys = function()
+--     local builtin = require 'telescope.builtin'
+--
+--     return {
+--       { '<leader>sf', builtin.find_files, desc = '[S]earch [F]iles' },
+--       { '<leader>ss', builtin.builtin, desc = '[S]earch [S]elect Telescope' },
+--       { '<leader>sg', builtin.live_grep, desc = '[S]earch by [G]rep' },
+--       { '<leader><leader>', builtin.buffers, desc = '[ ] Find existing buffers' },
+--       { '<leader>gg', builtin.git_status, desc = 'Find [G]iT Status' },
+--       { '<leader>gb', builtin.git_branches, desc = 'Find [G]iT [B]ranches' },
+--     }
+--   end,
+--   dependencies = {
+--     'nvim-lua/plenary.nvim',
+--     { -- If encountering errors, see telescope-fzf-native README for installation instructions
+--       'nvim-telescope/telescope-fzf-native.nvim',
+--
+--       -- `build` is used to run some command when the plugin is installed/updated.
+--       -- This is only run then, not every time Neovim starts up.
+--       build = 'make',
+--
+--       -- `cond` is a condition used to determine whether this plugin should be
+--       -- installed and loaded.
+--       cond = function()
+--         return vim.fn.executable 'make' == 1
+--       end,
+--     },
+--     { 'nvim-telescope/telescope-ui-select.nvim' },
+--   },
+--   config = function()
+--     require('telescope').setup {
+--       pickers = {
+--         live_grep = {
+--           theme = 'dropdown',
+--         },
+--         find_files = { hidden = true, theme = 'dropdown', previewer = false },
+--         buffers = {
+--           mappings = {
+--             n = {
+--               ['<C-d>'] = require('telescope.actions').delete_buffer,
+--             },
+--           },
+--           sort_mru = true,
+--           sort_lastused = true,
+--           initial_mode = 'normal',
+--           theme = 'ivy',
+--         },
+--       },
+--       extensions = {
+--         ['ui-select'] = {
+--           require('telescope.themes').get_dropdown(),
+--         },
+--       },
+--     }
+--
+--     -- Enable Telescope extensions if they are installed
+--     pcall(require('telescope').load_extension, 'fzf')
+--     pcall(require('telescope').load_extension, 'ui-select')
+--   end,
+-- }
 
-  local result = handle:read '*a'
-  handle:close()
-
-  if not result or result == '' then
-    return
-  end
-
-  local dirs = {}
-  local seen = {}
-  for dir in result:gmatch '[^\r\n]+' do
-    if not seen[dir] then
-      table.insert(dirs, dir)
-      seen[dir] = true
-    end
-  end
-  return dirs
-end
-
-return { -- Fuzzy Finder (files, lsp, etc)
-  'nvim-telescope/telescope.nvim',
-  cmd = { 'Telescope' },
-  -- Define keymaps here so Lazy sets them immediately and loads Telescope on first use
-  keys = function()
-    local builtin = require 'telescope.builtin'
-
-    return {
-      { '<leader>sf', builtin.find_files, desc = '[S]earch [F]iles' },
-      { '<leader>ss', builtin.builtin, desc = '[S]earch [S]elect Telescope' },
-      { '<leader>sg', builtin.live_grep, desc = '[S]earch by [G]rep' },
-      { '<leader><leader>', builtin.buffers, desc = '[ ] Find existing buffers' },
-      { '<leader>gg', builtin.git_status, desc = 'Find [G]iT Status' },
-      { '<leader>gb', builtin.git_branches, desc = 'Find [G]iT [B]ranches' },
-    }
-  end,
-  dependencies = {
-    'nvim-lua/plenary.nvim',
-    { -- If encountering errors, see telescope-fzf-native README for installation instructions
-      'nvim-telescope/telescope-fzf-native.nvim',
-
-      -- `build` is used to run some command when the plugin is installed/updated.
-      -- This is only run then, not every time Neovim starts up.
-      build = 'make',
-
-      -- `cond` is a condition used to determine whether this plugin should be
-      -- installed and loaded.
-      cond = function()
-        return vim.fn.executable 'make' == 1
-      end,
-    },
-    { 'nvim-telescope/telescope-ui-select.nvim' },
-  },
-  config = function()
-    require('telescope').setup {
-      pickers = {
-        live_grep = {
-          theme = 'dropdown',
-        },
-        find_files = { hidden = true, theme = 'dropdown', previewer = false },
-        buffers = {
-          mappings = {
-            n = {
-              ['<C-d>'] = require('telescope.actions').delete_buffer,
-            },
-          },
-          sort_mru = true,
-          sort_lastused = true,
-          initial_mode = 'normal',
-          theme = 'ivy',
-        },
-      },
-      extensions = {
-        ['ui-select'] = {
-          require('telescope.themes').get_dropdown(),
-        },
-      },
-    }
-
-    -- Enable Telescope extensions if they are installed
-    pcall(require('telescope').load_extension, 'fzf')
-    pcall(require('telescope').load_extension, 'ui-select')
-  end,
-}
+return {}

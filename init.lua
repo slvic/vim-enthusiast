@@ -49,6 +49,7 @@ vim.g.have_nerd_font = true
 require 'configs.opts'
 require 'configs.keymaps'
 require 'pack.telescope'()
+require 'plugins.neo-tree'()
 
 -- vim.api.nvim_create_autocmd('TextYankPost', {
 --   desc = 'Highlight when yanking (copying) text',

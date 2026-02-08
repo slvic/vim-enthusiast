@@ -1,23 +1,16 @@
--- Neo-tree is a Neovim plugin to browse the file system
--- https://github.com/nvim-neo-tree/neo-tree.nvim
+return function()
+  -- Add dependencies
+  vim.pack.add({
+    { src = 'https://github.com/nvim-lua/plenary.nvim' },
+    { src = 'https://github.com/nvim-tree/nvim-web-devicons' },
+    { src = 'https://github.com/MunifTanjim/nui.nvim' },
+  }, { load = true })
+  --
+  vim.pack.add({
+    { src = 'https://github.com/nvim-neo-tree/neo-tree.nvim' },
+  }, { load = true })
 
-return function() 
-
-  vim.pack.add( {
-    { src = 'https://github.com/nvim-lua/plenary.nvim'},
-    { src = 'https://github.com/nvim-tree/nvim-web-devicons'},
-    {src = 'https://github.com/MunifTanjim/nui.nvim'}
-  })
-
-vim.pack.add({
-	{src = 'https://github.com/nvim-neo-tree/neo-tree.nvim'}
-  }, {load = true})
-
-  require('neo-tree').setup{
-  keys = {
-    { '\\', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
-  },
-  opts = {
+  require('neo-tree').setup {
     filesystem = {
       filtered_items = {
         visible = true,
@@ -30,11 +23,9 @@ vim.pack.add({
               local node = state.tree:get_node()
               local filepath = node.path
 
-              -- open with system default app (nvim 0.10+)
               if vim.ui and vim.ui.open then
                 vim.ui.open(filepath)
               else
-                -- fallback to OS commands
                 local sysname = (vim.uv or vim.loop).os_uname().sysname
                 if sysname == 'Darwin' then
                   vim.fn.jobstart({ 'open', filepath }, { detach = true })
@@ -48,8 +39,6 @@ vim.pack.add({
             desc = 'open_with_system_defaults',
           },
           ['Y'] = function(state)
-            -- NeoTree is based on [NuiTree](https://github.com/MunifTanjim/nui.nvim/tree/main/lua/nui/tree)
-            -- The node is based on [NuiNode](https://github.com/MunifTanjim/nui.nvim/tree/main/lua/nui/tree#nuitreenode)
             local node = state.tree:get_node()
             local filepath = node:get_id()
             local filename = node.name
@@ -64,7 +53,6 @@ vim.pack.add({
               modify(filename, ':e'),
             }
 
-            -- absolute path to clipboard
             local i = vim.fn.inputlist {
               'Choose to copy to clipboard:',
               '1. Absolute path: ' .. results[1],
@@ -87,6 +75,8 @@ vim.pack.add({
         },
       },
     },
-  },
   }
-  end
+
+  -- Set up keymap
+  vim.keymap.set('n', '\\', ':Neotree reveal<CR>', { desc = 'NeoTree reveal', silent = true })
+end

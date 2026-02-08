@@ -29,13 +29,11 @@ return function()
     { src = 'https://github.com/nvim-telescope/telescope-fzf-native.nvim' },
     { src = 'https://github.com/nvim-telescope/telescope-ui-select.nvim' },
   }, { load = true })
-
-  -- Add telescope itself
+  --
   vim.pack.add({
     { src = 'https://github.com/nvim-telescope/telescope.nvim' },
   }, { load = true })
 
-  -- Configure telescope
   require('telescope').setup {
     pickers = {
       live_grep = { theme = 'dropdown' },
@@ -60,11 +58,9 @@ return function()
     },
   }
 
-  -- Load extensions
   pcall(require('telescope').load_extension, 'fzf')
   pcall(require('telescope').load_extension, 'ui-select')
 
-  -- Set up keymaps
   local builtin = require 'telescope.builtin'
   vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
   vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })

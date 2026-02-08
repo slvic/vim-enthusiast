@@ -16,13 +16,13 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 require 'configs.opts'
 require 'configs.keymaps'
 
-require 'pack.misc'()
-require 'pack.telescope'()
-require 'pack.lsp'()
-require 'pack.neo-tree'()
-require 'pack.gitsigns'()
-require 'pack.which-key'()
-require 'pack.treesitter'()
+require 'pack.misc'
+require 'pack.telescope'
+require 'pack.lsp'
+require 'pack.neo-tree'
+require 'pack.gitsigns'
+require 'pack.which-key'
+require 'pack.treesitter'
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

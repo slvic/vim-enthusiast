@@ -22,50 +22,48 @@ localgetGoModDirs = function()
   return dirs
 end
 
-return function()
-  -- Add dependencies
-  vim.pack.add({
-    { src = 'https://github.com/nvim-lua/plenary.nvim' },
-    { src = 'https://github.com/nvim-telescope/telescope-fzf-native.nvim' },
-    { src = 'https://github.com/nvim-telescope/telescope-ui-select.nvim' },
-  }, { load = true })
-  --
-  vim.pack.add({
-    { src = 'https://github.com/nvim-telescope/telescope.nvim' },
-  }, { load = true })
+-- Add dependencies
+vim.pack.add({
+  { src = 'https://github.com/nvim-lua/plenary.nvim' },
+  { src = 'https://github.com/nvim-telescope/telescope-fzf-native.nvim' },
+  { src = 'https://github.com/nvim-telescope/telescope-ui-select.nvim' },
+}, { load = true })
+--
+vim.pack.add({
+  { src = 'https://github.com/nvim-telescope/telescope.nvim' },
+}, { load = true })
 
-  require('telescope').setup {
-    pickers = {
-      live_grep = { theme = 'dropdown' },
-      find_files = {
-        hidden = true,
-        theme = 'dropdown',
-        previewer = false,
-        file_ignore_patterns = { '%.git/' },
-      },
-      buffers = {
-        mappings = {
-          n = { ['<C-d>'] = require('telescope.actions').delete_buffer },
-        },
-        sort_mru = true,
-        sort_lastused = true,
-        initial_mode = 'normal',
-        theme = 'ivy',
-      },
+require('telescope').setup {
+  pickers = {
+    live_grep = { theme = 'dropdown' },
+    find_files = {
+      hidden = true,
+      theme = 'dropdown',
+      previewer = false,
+      file_ignore_patterns = { '%.git/' },
     },
-    extensions = {
-      ['ui-select'] = { require('telescope.themes').get_dropdown() },
+    buffers = {
+      mappings = {
+        n = { ['<C-d>'] = require('telescope.actions').delete_buffer },
+      },
+      sort_mru = true,
+      sort_lastused = true,
+      initial_mode = 'normal',
+      theme = 'ivy',
     },
-  }
+  },
+  extensions = {
+    ['ui-select'] = { require('telescope.themes').get_dropdown() },
+  },
+}
 
-  pcall(require('telescope').load_extension, 'fzf')
-  pcall(require('telescope').load_extension, 'ui-select')
+pcall(require('telescope').load_extension, 'fzf')
+pcall(require('telescope').load_extension, 'ui-select')
 
-  local builtin = require 'telescope.builtin'
-  vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
-  vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
-  vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
-  vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
-  vim.keymap.set('n', '<leader>gg', builtin.git_status, { desc = 'Find [G]iT Status' })
-  vim.keymap.set('n', '<leader>gb', builtin.git_branches, { desc = 'Find [G]iT [B]ranches' })
-end
+local builtin = require 'telescope.builtin'
+vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
+vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
+vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
+vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+vim.keymap.set('n', '<leader>gg', builtin.git_status, { desc = 'Find [G]iT Status' })
+vim.keymap.set('n', '<leader>gb', builtin.git_branches, { desc = 'Find [G]iT [B]ranches' })

@@ -13,5 +13,9 @@ require 'pack.which-key'
 require 'pack.treesitter'
 require 'pack.dap'
 
+vim.pack.add({
+  { src = 'https://github.com/saghen/blink.cmp' },
+}, { load = true })
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

@@ -6,7 +6,6 @@ vim.pack.add({
   { src = 'https://github.com/stevearc/conform.nvim' },
 }, { load = true })
 
--- Configure conform
 require('conform').setup {
   notify_on_error = false,
   format_on_save = function(bufnr)
@@ -26,8 +25,16 @@ require('conform').setup {
 }
 
 require 'lspconfig'
-vim.lsp.enable 'gopls'
-
+vim.lsp.enable { 'gopls', 'lua_ls', 'jsonnet_ls' }
+vim.lsp.config('lua_ls', {
+  settings = {
+    Lua = {
+      workspace = {
+        library = vim.api.nvim_get_runtime_file('', true),
+      },
+    },
+  },
+})
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
     local opts = { buffer = args.buf }

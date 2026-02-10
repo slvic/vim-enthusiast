@@ -25,7 +25,7 @@ require('conform').setup {
 }
 
 require 'lspconfig'
-vim.lsp.enable { 'gopls', 'lua_ls', 'jsonnet_ls' }
+vim.lsp.enable { 'gopls', 'lua_ls', 'jsonnet_ls', 'ts_ls' }
 vim.lsp.config('lua_ls', {
   settings = {
     Lua = {

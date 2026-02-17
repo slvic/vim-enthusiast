@@ -40,7 +40,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
     local opts = { buffer = args.buf }
     local builtin = require 'telescope.builtin'
 
-    -- Telescope LSP Pickers
     vim.keymap.set('n', 'gd', function()
       builtin.lsp_definitions { initial_mode = 'normal' }
     end, opts)
@@ -51,6 +50,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
       builtin.lsp_implementations { initial_mode = 'normal' }
     end, opts)
     vim.keymap.set('n', '<leader>gs', builtin.lsp_document_symbols, opts)
+
+    vim.keymap.set({ 'n', 'v' }, '<leader>ga', vim.lsp.buf.code_action, opts)
+    vim.keymap.set('n', '<leader>gr', vim.lsp.buf.rename, opts)
 
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
   end,

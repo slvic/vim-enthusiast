@@ -17,6 +17,10 @@
       "rev": "1ce96a464fdbc24208e24c117e2021794259005d",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
+    "go-struct-implements": {
+      "rev": "46b94a683d6a6a4046f5445ea9651859c4aa85e9",
+      "src": "https://github.com/slvic/go-struct-implements"
+    },
     "guess-indent.nvim": {
       "rev": "84a4987ff36798c2fc1169cbaff67960aed9776f",
       "src": "https://github.com/NMAC427/guess-indent.nvim"
@@ -28,6 +32,10 @@
     "mini.pick": {
       "rev": "4ad37ade984e69c43227b82ccdca5a92a22886de",
       "src": "https://github.com/nvim-mini/mini.pick"
+    },
+    "minimap.vim": {
+      "rev": "57287e2dd28fa3e63276a32d11c729df14741d54",
+      "src": "https://github.com/wfxr/minimap.vim"
     },
     "neo-tree.nvim": {
       "rev": "2d04b7a422c9f84788bbb4e5ca2634c81dd0f5a3",
@@ -92,6 +100,10 @@
     "todo-comments.nvim": {
       "rev": "31e3c38ce9b29781e4422fc0322eb0a21f4e8668",
       "src": "https://github.com/folke/todo-comments.nvim"
+    },
+    "vim-surround": {
+      "rev": "3d188ed2113431cf8dac77be61b842acb64433d9",
+      "src": "https://github.com/tpope/vim-surround"
     },
     "which-key.nvim": {
       "rev": "3aab2147e74890957785941f0c1ad87d0a44c15a",

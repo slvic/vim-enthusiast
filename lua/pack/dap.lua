@@ -1,3 +1,4 @@
+---@diagnostic disable: missing-fields
 vim.pack.add({
   { src = 'https://github.com/mfussenegger/nvim-dap' },
   { src = 'https://github.com/nvim-neotest/nvim-nio' },
@@ -8,8 +9,26 @@ vim.pack.add({
 require('dap-go').setup()
 local flags = { noremap = true, silent = true }
 vim.api.nvim_set_keymap('n', '<leader>ds', ':lua require("dap").continue()<cr>', flags)
-vim.api.nvim_set_keymap('n', '<leader>db', ':lua require("dap").toggle_breakpoint()<cr>', flags)
+vim.api.nvim_set_keymap('', '<leader>dd', ':lua require("dap").toggle_breakpoint()<cr>', flags)
+vim.api.nvim_set_keymap('n', '<leader>df', ':lua require("dap").toggle_breakpoint(vim.fn.input("Enter condition: "))<cr>', flags)
+vim.api.nvim_set_keymap(
+  'n',
+  '<leader>dF',
+  ':lua require("dap").toggle_breakpoint(vim.fn.input("Enter condition: "), vim.fn.input("Enter hit-condition: "))<cr>',
+  flags
+)
+vim.api.nvim_set_keymap('v', '<leader>de', ':lua require("dapui").eval()<cr>', flags)
+vim.api.nvim_set_keymap('n', '<leader>de', ':lua require("dapui").eval()<cr>', flags)
 vim.api.nvim_set_keymap('n', '<leader>dt', ':lua require("dapui").toggle()<cr>', flags)
+vim.api.nvim_set_keymap('n', '<leader>dT', ':lua require("dap-go").debug_test()<cr>', flags)
+vim.api.nvim_set_keymap('n', '<leader>dc', ':lua require("dap").run_to_cursor()<cr>', flags)
+
+-- vim.api.nvim_set_keymap('n', '<S-left>', ':lua require("dap").reverse_continue()<cr>', flags)
+-- vim.api.nvim_set_keymap('n', '<left>', ':lua require("dap").step_back()<cr>', flags)
+vim.api.nvim_set_keymap('n', '<down>', ':lua require("dap").step_into()<cr>', flags)
+vim.api.nvim_set_keymap('n', '<right>', ':lua require("dap").step_over()<cr>', flags)
+vim.api.nvim_set_keymap('n', '<up>', ':lua require("dap").step_out()<cr>', flags)
+vim.api.nvim_set_keymap('n', '<leader>dS', ':lua require("dap").terminate(nil, nil, killDebuggers)<cr>', flags)
 
 vim.api.nvim_set_hl(0, 'Red', { fg = '#ec7f8e', bold = true })
 vim.fn.sign_define('DapBreakpoint', { text = '', texthl = 'Red', linehl = '', numhl = 'Red' })
@@ -30,29 +49,27 @@ require('dapui').setup {
   layouts = {
     {
       elements = {
-        { id = 'breakpoints', size = 0.30 },
-        { id = 'scopes', size = 0.45 },
-        { id = 'watches', size = 0.25 },
+        { id = 'repl', size = 1 },
       },
-      size = 0.30,
-      position = 'left',
+      size = 10, -- Height of the bottom tray
+      position = 'bottom',
     },
     {
       elements = {
-        'repl',
-        'stacks',
+        { id = 'scopes', size = 0.5 },
+        { id = 'stacks', size = 0.5 },
       },
-      size = 0.30,
-      position = 'bottom',
+      size = 0.3,
+      position = 'left',
     },
-  },
-  floating = {
-    max_height = nil, -- These can be integers or a float between 0 and 1.
-    max_width = nil, -- Floats will be treated as percentage of your screen.
-    border = 'single', -- Border style. Can be 'single', 'double' or 'rounded'
-    mappings = {
-      close = { 'q', '<Esc>' },
+    floating = {
+      max_height = nil, -- These can be integers or a float between 0 and 1.
+      max_width = nil, -- Floats will be treated as percentage of your screen.
+      border = 'single', -- Border style. Can be 'single', 'double' or 'rounded'
+      mappings = {
+        close = { 'q', '<Esc>' },
+      },
     },
+    windows = { indent = 1 },
   },
-  windows = { indent = 1 },
 }

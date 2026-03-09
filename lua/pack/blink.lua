@@ -6,12 +6,16 @@ vim.pack.add({
 }, { load = true })
 
 require('blink.cmp').setup {
-  keymap = { preset = 'default' },
+  keymap = {
+    preset = 'enter',
+    ['<Tab>'] = { 'select_next', 'fallback' },
+    ['<S-Tab>'] = { 'select_prev', 'fallback' },
+  },
   appearance = {
     nerd_font_variant = 'mono',
   },
   completion = {
-    documentation = { auto_show = false },
+    documentation = { auto_show = true },
   },
   sources = {
     default = { 'lsp', 'path', 'snippets', 'buffer' },

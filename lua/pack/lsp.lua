@@ -49,6 +49,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', 'gI', function()
       builtin.lsp_implementations { initial_mode = 'normal' }
     end, opts)
+    vim.keymap.set('n', 'gT', vim.lsp.buf.type_definition, { silent = true })
     vim.keymap.set('n', '<leader>gs', builtin.lsp_document_symbols, opts)
 
     vim.keymap.set({ 'n', 'v' }, '<leader>ga', vim.lsp.buf.code_action, opts)
@@ -57,3 +58,5 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
   end,
 })
+vim.opt.swapfile = false
+vim.opt.shortmess:append 'A'

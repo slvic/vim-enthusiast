@@ -29,3 +29,5 @@ vim.pack.add({ 'https://github.com/nvim-mini/mini.nvim' }, {
     end
   end,
 })
+
+vim.pack.add { 'https://github.com/tpope/vim-surround' }

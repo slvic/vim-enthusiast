@@ -68,3 +68,52 @@ vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find exis
 vim.keymap.set('n', '<leader>gg', builtin.git_status, { desc = 'Find [G]iT Status' })
 vim.keymap.set('n', '<leader>gb', builtin.git_branches, { desc = 'Find [G]iT [B]ranches' })
 vim.keymap.set('n', '<leader>gi', require('telescope.builtin').lsp_implementations, { desc = 'Go to Implementation (Telescope)' })
+
+-- Dynamically get only the dependency paths for the current project
+local function get_project_deps_paths()
+  local paths = {}
+  -- "go list -m -f {{.Dir}} all" returns absolute paths for all modules in go.mod
+  local handle = io.popen 'go list -m -f "{{.Dir}}" all 2>/dev/null'
+  if handle then
+    for line in handle:lines() do
+      -- Filter out empty lines (for modules not downloaded) and the main project root
+      if line ~= '' and line ~= vim.fn.getcwd() then
+        table.insert(paths, line)
+      end
+    end
+    handle:close()
+  end
+  return paths
+end
+
+-- 1. Find Files ONLY in current project's dependencies
+local function find_project_go_deps()
+  local deps = get_project_deps_paths()
+  if #deps == 0 then
+    print 'No dependencies found'
+    return
+  end
+
+  builtin.find_files {
+    prompt_title = 'Find Files (Project Deps)',
+    search_dirs = deps,
+  }
+end
+
+-- 2. Live Grep ONLY in current project's dependencies
+local function grep_project_go_deps()
+  local deps = get_project_deps_paths()
+  if #deps == 0 then
+    print 'No dependencies found'
+    return
+  end
+
+  builtin.live_grep {
+    prompt_title = 'Live Grep (Project Deps)',
+    search_dirs = deps,
+  }
+end
+
+-- Suggested Keymaps
+vim.keymap.set('n', '<leader>Sf', find_project_go_deps, { desc = '[S]earch [f]ile globally in deps' })
+vim.keymap.set('n', '<leader>Sg', grep_project_go_deps, { desc = '[S]earch [g]rep globally in deps' })

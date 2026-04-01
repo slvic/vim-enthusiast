@@ -6,7 +6,7 @@ require 'configs.keymaps'
 
 require 'pack.misc'
 require 'pack.telescope'
-require 'pack.minuet'
+-- require 'pack.minuet'
 require 'pack.blink'
 require 'pack.lsp'
 require 'pack.neo-tree'

@@ -5,7 +5,7 @@ vim.pack.add({
   dependencies = { 'https://github.com/nvim-lua/plenary.nvim', 'https://github.com/saghen/blink.cmp' },
 })
 
-require('minuet').setup({
+require('minuet').setup {
   provider = 'openai_fim_compatible',
   provider_options = {
     openai_fim_compatible = {
@@ -26,4 +26,4 @@ require('minuet').setup({
   request_timeout = 3,
   throttle = 1000,
   debounce = 200,
-})
+}

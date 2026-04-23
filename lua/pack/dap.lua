@@ -6,7 +6,19 @@ vim.pack.add({
   { src = 'https://github.com/leoluz/nvim-dap-go' },
 }, { load = true })
 
-require('dap-go').setup()
+require('dap-go').setup {
+  dap_configurations = {
+    {
+      type = 'go',
+      name = 'Debug Package (Argumants)',
+      request = 'launch',
+      program = '${fileDirname}',
+      args = require('dap-go').get_arguments,
+      outputMode = 'remote',
+    },
+  },
+}
+
 local flags = { noremap = true, silent = true }
 vim.api.nvim_set_keymap('n', '<leader>ds', ':lua require("dap").continue()<cr>', flags)
 vim.api.nvim_set_keymap('', '<leader>dd', ':lua require("dap").toggle_breakpoint()<cr>', flags)

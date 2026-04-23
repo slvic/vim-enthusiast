@@ -31,3 +31,13 @@ vim.pack.add({ 'https://github.com/nvim-mini/mini.nvim' }, {
 })
 
 vim.pack.add { 'https://github.com/tpope/vim-surround' }
+
+vim.opt.termguicolors = true
+vim.pack.add { 'https://github.com/brenoprata10/nvim-highlight-colors' }
+require('nvim-highlight-colors').setup {
+  render = 'virtual',
+  virtual_symbol_position = 'eol',
+  virtual_symbol = '●',
+}
+
+-- vim.pack.add({ 'https://github.com/slvic/go-struct-implements' }, { load = true })

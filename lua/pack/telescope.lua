@@ -27,6 +27,7 @@ vim.pack.add({
   { src = 'https://github.com/nvim-lua/plenary.nvim' },
   { src = 'https://github.com/nvim-telescope/telescope-fzf-native.nvim' },
   { src = 'https://github.com/nvim-telescope/telescope-ui-select.nvim' },
+  { src = 'https://github.com/nvim-telescope/telescope-dap.nvim' },
 }, { load = true })
 --
 vim.pack.add({
@@ -59,6 +60,7 @@ require('telescope').setup {
 
 pcall(require('telescope').load_extension, 'fzf')
 pcall(require('telescope').load_extension, 'ui-select')
+pcall(require('telescope').load_extension, 'dap')
 
 local builtin = require 'telescope.builtin'
 vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })

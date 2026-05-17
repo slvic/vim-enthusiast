@@ -25,6 +25,8 @@ end
 -- Add dependencies
 vim.pack.add({
   { src = 'https://github.com/nvim-lua/plenary.nvim' },
+  { src = 'https://github.com/mfussenegger/nvim-dap' },
+  { src = 'https://github.com/nvim-treesitter/nvim-treesitter' },
   { src = 'https://github.com/nvim-telescope/telescope-fzf-native.nvim' },
   { src = 'https://github.com/nvim-telescope/telescope-ui-select.nvim' },
   { src = 'https://github.com/nvim-telescope/telescope-dap.nvim' },
@@ -38,10 +40,11 @@ require('telescope').setup {
   pickers = {
     live_grep = { theme = 'dropdown' },
     find_files = {
+      no_ignore = true,
       hidden = true,
       theme = 'dropdown',
       previewer = false,
-      file_ignore_patterns = { '%.git/' },
+      file_ignore_patterns = { '%.git/', '%.idea/' },
     },
     buffers = {
       mappings = {
@@ -65,6 +68,7 @@ pcall(require('telescope').load_extension, 'dap')
 local builtin = require 'telescope.builtin'
 vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
 vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
+vim.keymap.set('n', '<leader>sd', require('telescope').extensions.dap.list_breakpoints, { desc = '[S]earch [D]ap breakpoints Telescope' })
 vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
 vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
 vim.keymap.set('n', '<leader>gg', builtin.git_status, { desc = 'Find [G]iT Status' })

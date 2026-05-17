@@ -41,3 +41,8 @@ require('nvim-highlight-colors').setup {
 }
 
 -- vim.pack.add({ 'https://github.com/slvic/go-struct-implements' }, { load = true })
+--
+
+vim.pack.add({'https://github.com/MeanderingProgrammer/render-markdown.nvim'}, {
+	dependencies = {    'https://github.com/nvim-treesitter/nvim-treesitter'}
+})

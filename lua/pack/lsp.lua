@@ -21,11 +21,18 @@ require('conform').setup {
   end,
   formatters_by_ft = {
     lua = { 'stylua' },
+    json = { 'jq' },
+    jsonc = { 'jq' },
+  },
+  formatters = {
+    jq = {
+      prepend_args = { '--indent', '1' },
+    },
   },
 }
 
 require 'lspconfig'
-vim.lsp.enable { 'gopls', 'lua_ls', 'jsonnet_ls', 'ts_ls' }
+vim.lsp.enable { 'gopls', 'lua_ls', 'jsonnet_ls', 'ts_ls', 'jsonls' }
 vim.lsp.config('lua_ls', {
   settings = {
     Lua = {

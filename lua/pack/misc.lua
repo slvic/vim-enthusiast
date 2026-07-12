@@ -43,6 +43,12 @@ require('nvim-highlight-colors').setup {
 -- vim.pack.add({ 'https://github.com/slvic/go-struct-implements' }, { load = true })
 --
 
-vim.pack.add({'https://github.com/MeanderingProgrammer/render-markdown.nvim'}, {
-	dependencies = {    'https://github.com/nvim-treesitter/nvim-treesitter'}
+vim.g.mkdp_browser = 'Zen'
+vim.pack.add { 'https://github.com/iamcco/markdown-preview.nvim' }
+vim.api.nvim_create_autocmd('PackChanged', {
+  callback = function(ev)
+    if ev.data.kind == 'install' and ev.data.name == 'markdown-preview.nvim' then
+      vim.fn.system { 'bash', vim.fn.stdpath('data') .. '/site/pack/core/opt/markdown-preview.nvim/app/install.sh' }
+    end
+  end,
 })

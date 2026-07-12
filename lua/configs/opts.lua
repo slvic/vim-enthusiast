@@ -15,6 +15,15 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'json', 'jsonc' },
+  callback = function()
+    vim.opt_local.tabstop = 4 -- Number of spaces that a <Tab> counts for
+    vim.opt_local.shiftwidth = 4 -- Number of spaces to use for each step of indent
+    vim.opt_local.expandtab = true -- Convert tabs to spaces
+  end,
+})
+
 vim.o.autowrite = true
 
 vim.o.foldmethod = 'expr'

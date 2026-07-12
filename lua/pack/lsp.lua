@@ -24,6 +24,7 @@ require('conform').setup {
     json = { 'jq' },
     jsonc = { 'jq' },
     ocaml = { 'ocamlformat' },
+    python = { 'ruff_format' },
   },
   formatters = {
     jq = {
@@ -33,7 +34,7 @@ require('conform').setup {
 }
 
 require 'lspconfig'
-vim.lsp.enable { 'gopls', 'lua_ls', 'jsonnet_ls', 'ts_ls', 'jsonls', 'ocamllsp' }
+vim.lsp.enable { 'gopls', 'lua_ls', 'jsonnet_ls', 'ts_ls', 'jsonls', 'ocamllsp', 'pyright', 'ruff' }
 vim.lsp.config('lua_ls', {
   settings = {
     Lua = {
@@ -42,6 +43,12 @@ vim.lsp.config('lua_ls', {
       },
     },
   },
+})
+vim.lsp.config('ruff', {
+  on_attach = function(client)
+    -- pyright handles hover; ruff only lints/formats
+    client.server_capabilities.hoverProvider = false
+  end,
 })
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)

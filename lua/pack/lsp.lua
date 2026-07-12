@@ -23,6 +23,7 @@ require('conform').setup {
     lua = { 'stylua' },
     json = { 'jq' },
     jsonc = { 'jq' },
+    ocaml = { 'ocamlformat' },
   },
   formatters = {
     jq = {
@@ -32,7 +33,7 @@ require('conform').setup {
 }
 
 require 'lspconfig'
-vim.lsp.enable { 'gopls', 'lua_ls', 'jsonnet_ls', 'ts_ls', 'jsonls' }
+vim.lsp.enable { 'gopls', 'lua_ls', 'jsonnet_ls', 'ts_ls', 'jsonls', 'ocamllsp' }
 vim.lsp.config('lua_ls', {
   settings = {
     Lua = {

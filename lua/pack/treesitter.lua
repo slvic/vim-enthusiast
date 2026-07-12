@@ -18,6 +18,7 @@ require('nvim-treesitter').install {
   'vimdoc',
   'php',
   'yaml',
+  'ocaml',
 }
 vim.api.nvim_create_autocmd('FileType', {
   pattern = {
@@ -36,6 +37,7 @@ vim.api.nvim_create_autocmd('FileType', {
     'vimdoc',
     'php',
     'yaml',
+    'ocaml',
   },
   callback = function()
     vim.treesitter.start()

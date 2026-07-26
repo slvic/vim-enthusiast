@@ -26,7 +26,7 @@ vim.api.nvim_create_autocmd('FileType', {
 
 vim.o.autowrite = true
 
-vim.o.foldmethod = 'expr'
+vim.o.foldmethod = 'manual'
 vim.o.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
 vim.o.foldenable = false
 vim.o.winborder = 'double'

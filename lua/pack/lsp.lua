@@ -35,6 +35,23 @@ require('conform').setup {
 
 require 'lspconfig'
 vim.lsp.enable { 'gopls', 'lua_ls', 'jsonnet_ls', 'ts_ls', 'jsonls', 'ocamllsp', 'pyright', 'ruff' }
+vim.lsp.config('gopls', {
+  settings = {
+    gopls = {
+      hints = {
+        assignVariableTypes = true,
+        compositeLiteralFields = true,
+        compositeLiteralTypes = true,
+        constantValues = true,
+        functionTypeParameters = true,
+        parameterNames = true,
+        rangeVariableTypes = true,
+      },
+    },
+  },
+})
+vim.lsp.inlay_hint.enable(true)
+
 vim.lsp.config('lua_ls', {
   settings = {
     Lua = {
@@ -71,6 +88,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', '<leader>gr', vim.lsp.buf.rename, opts)
 
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+    vim.keymap.set('n', '<leader>uh', function()
+      vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+    end, vim.tbl_extend('force', opts, { desc = 'Toggle inlay hints' }))
   end,
 })
 vim.opt.swapfile = false

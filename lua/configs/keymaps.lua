@@ -56,3 +56,9 @@ vim.keymap.set('n', '<leader>tj', ':tjump <C-r><C-w><CR>', { desc = '[T]ags: [J]
 -- Next / Previous matching tag
 vim.keymap.set('n', '<leader>tn', ':tnext<CR>', { desc = '[T]ags: [N]ext match' })
 vim.keymap.set('n', '<leader>tp', ':tprev<CR>', { desc = '[T]ags: [P]revious match' })
+
+vim.keymap.set('n', '<leader>fp', function()
+  local path = vim.fn.expand '%:p'
+  vim.fn.setreg('+', path)
+  print('Copied absolute path: ' .. path)
+end, { desc = 'Copy current file absolute path' })

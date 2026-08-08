@@ -20,6 +20,7 @@ require('nvim-treesitter').install {
   'yaml',
   'ocaml',
   'python',
+  'rust',
 }
 vim.api.nvim_create_autocmd('FileType', {
   pattern = {
@@ -40,6 +41,7 @@ vim.api.nvim_create_autocmd('FileType', {
     'yaml',
     'ocaml',
     'python',
+    'rust',
   },
   callback = function()
     vim.treesitter.start()

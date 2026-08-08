@@ -99,6 +99,48 @@ python3 -m venv ~/.local/share/nvim-dap-venv
 `~/.local/share/nvim-dap-venv/bin/python` — no further config changes
 needed once the venv exists.)
 
+## Rust
+
+- **LSP**: `rust-analyzer`
+- **Formatter**: `rustfmt` (invoked by rust-analyzer's formatting request, same
+  implicit `lsp_format = 'fallback'` path Go uses — no `conform.nvim` entry
+  needed)
+- **Linter**: `clippy`, wired up via rust-analyzer's `checkOnSave` (see
+  `lua/pack/lsp.lua`)
+- **DAP**: `codelldb`, wired up manually in `lua/pack/dap.lua` (no
+  `nvim-dap-rust` wrapper plugin exists, unlike `nvim-dap-go`)
+
+```sh
+brew install rustup   # formula was renamed from rustup-init; installs the
+                       # `rustup` binary, which bootstraps a default toolchain
+                       # on first use (no separate `rustup-init` step needed)
+rustup component add rust-analyzer rustfmt clippy
+```
+
+> **Known issue**: Homebrew's `rustup` build disables the proxy-binary
+> self-install step that the official `rustup-init` installer does, so
+> `~/.cargo/bin` (on `$PATH` by convention) can end up empty even though the
+> toolchain is installed — `rustc`/`cargo`/`rust-analyzer` then resolve to
+> nothing and rust-analyzer can't start in Neovim (`:LspInfo` shows no
+> `rust_analyzer` client). Tracked upstream: rust-lang/rustup#4934 and
+> Homebrew/homebrew-core#291044 (both closed as "use the documented
+> `$PATH` setup"). The formula's own caveat has the real fix — add its
+> keg-only `bin/` dir (which contains proper dispatch shims, not raw
+> binaries) *ahead of* `~/.cargo/bin` in `$PATH`:
+> ```sh
+> export PATH="/opt/homebrew/opt/rustup/bin:$HOME/.cargo/bin:$PATH"
+> ```
+> (already added to `~/.zshrc`). Unlike symlinking toolchain binaries
+> directly, these shims dispatch through `rustup` itself, so they keep
+> working across `rustup default <toolchain>` switches.
+
+`codelldb` has no Homebrew formula — download the macOS release from
+https://github.com/vadimcn/codelldb/releases, unzip it, and place the
+extracted `extension` directory's contents under
+`~/.local/share/nvim-dap-adapters/codelldb/` so that
+`~/.local/share/nvim-dap-adapters/codelldb/adapter/codelldb` exists
+(`lua/pack/dap.lua` already points at that path).
+
 ## Treesitter-only languages (highlighting, no LSP/formatter configured)
 
 `bash`, `c`, `diff`, `html`, `markdown`/`markdown_inline`, `php`, `query`,
@@ -123,4 +165,8 @@ npm install -g typescript typescript-language-server vscode-langservers-extracte
 opam init && opam install ocaml-lsp-server ocamlformat && eval $(opam env)
 python3 -m venv ~/.local/share/nvim-dap-venv
 ~/.local/share/nvim-dap-venv/bin/python -m pip install --upgrade pip debugpy
+brew install rustup && rustup component add rust-analyzer rustfmt clippy
+# codelldb: download macOS release from https://github.com/vadimcn/codelldb/releases
+# and place the extracted `extension` dir contents under
+# ~/.local/share/nvim-dap-adapters/codelldb/
 ```

@@ -22,6 +22,27 @@ require('dap-go').setup {
 
 require('dap-python').setup(vim.fn.expand '~/.local/share/nvim-dap-venv/bin/python')
 
+require('dap').adapters.codelldb = {
+  type = 'server',
+  port = '${port}',
+  executable = {
+    command = vim.fn.expand '~/.local/share/nvim-dap-adapters/codelldb/adapter/codelldb',
+    args = { '--port', '${port}' },
+  },
+}
+require('dap').configurations.rust = {
+  {
+    name = 'Debug',
+    type = 'codelldb',
+    request = 'launch',
+    program = function()
+      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/target/debug/', 'file')
+    end,
+    cwd = '${workspaceFolder}',
+    stopOnEntry = false,
+  },
+}
+
 local flags = { noremap = true, silent = true }
 vim.api.nvim_set_keymap('n', '<leader>ds', ':lua require("dap").continue()<cr>', flags)
 vim.api.nvim_set_keymap('', '<leader>dd', ':lua require("dap").toggle_breakpoint()<cr>', flags)

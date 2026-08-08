@@ -34,7 +34,23 @@ require('conform').setup {
 }
 
 require 'lspconfig'
-vim.lsp.enable { 'gopls', 'lua_ls', 'jsonnet_ls', 'ts_ls', 'jsonls', 'ocamllsp', 'pyright', 'ruff' }
+vim.lsp.enable { 'gopls', 'lua_ls', 'jsonnet_ls', 'ts_ls', 'jsonls', 'ocamllsp', 'pyright', 'ruff', 'rust_analyzer' }
+vim.lsp.config('rust_analyzer', {
+  settings = {
+    ['rust-analyzer'] = {
+      check = { command = 'clippy' },
+      inlayHints = {
+        bindingModeHints = { enable = true },
+        chainingHints = { enable = true },
+        closureReturnTypeHints = { enable = 'always' },
+        lifetimeElisionHints = { enable = 'skip_trivial' },
+        parameterHints = { enable = true },
+        reborrowHints = { enable = 'always' },
+        typeHints = { enable = true },
+      },
+    },
+  },
+})
 vim.lsp.config('gopls', {
   settings = {
     gopls = {

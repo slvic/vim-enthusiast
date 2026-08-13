@@ -47,3 +47,24 @@ vim.api.nvim_create_autocmd('FileType', {
     vim.treesitter.start()
   end,
 })
+
+vim.pack.add({
+  { src = 'https://github.com/nvim-treesitter/nvim-treesitter-context' },
+}, {
+  dependencies = { 'https://github.com/nvim-treesitter/nvim-treesitter' },
+})
+
+require('treesitter-context').setup {
+  enable = true,
+  max_lines = 0,
+  min_window_height = 0,
+  line_numbers = true,
+  multiline_threshold = 20,
+  trim_scope = 'outer',
+  mode = 'cursor',
+  zindex = 20,
+}
+
+vim.keymap.set('n', '<leader>tc', function()
+  require('treesitter-context').toggle()
+end, { desc = '[T]oggle [c]ontext' })
